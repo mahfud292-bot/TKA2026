@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi TKA Bahasa Inggris 2026 - SMAN 1 Banggai</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            600: '#0265d2',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for text passage */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        /* Print Styles */
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white; color: black; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 antialiased selection:bg-brand-500 selection:text-white min-h-screen flex flex-col">
+
+    <!-- WELCOME / IDENTITY MODAL -->
+    <div id="welcome-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-xl w-full p-6 sm:p-8 border border-slate-100 animate-fade-in">
+            <div class="flex items-center gap-4 border-b border-slate-100 pb-5 mb-6">
+                <div class="w-14 h-14 bg-gradient-to-br from-brand-600 to-indigo-700 rounded-xl flex items-center justify-center text-white shadow-lg shadow-brand-500/30 flex-shrink-0">
+                    <i data-lucide="graduation-cap" class="w-8 h-8"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold text-slate-900">SMA NEGERI 1 BANGGAI</h1>
+                    <p class="text-sm font-medium text-brand-700">Paket Simulasi TKA Bahasa Inggris 2026</p>
+                    <p class="text-xs text-slate-600 mt-1 flex items-center gap-1.5 font-medium">
+                        <i data-lucide="user-check" class="w-3.5 h-3.5 text-brand-600"></i>
+                        <span>Guru Pengampu: <strong class="text-slate-800">Mahfud S. Paukunding, S.Pd., Gr., M.Pd.</strong></span>
+                    </p>
+                </div>
+            </div>
+
+            <form id="start-form" onsubmit="startExam(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Nama Lengkap Siswa</label>
+                    <input type="text" id="student-name" required placeholder="Masukkan nama lengkap" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition text-slate-900 font-medium">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Kelas / Rombel</label>
+                        <select id="student-class" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition text-slate-900 font-medium">
+                            <option value="XII A">XII A</option>
+                            <option value="XII B">XII B</option>
+                            <option value="XII C">XII C</option>
+                            <option value="XII D">XII D</option>
+                            <option value="XII E">XII E</option>
+                            <option value="XII F">XII F</option>
+                            <option value="XII G">XII G</option>
+                            <option value="XII H">XII H</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Durasi Ujian</label>
+                        <select id="exam-duration" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition text-slate-900 font-medium">
+                            <option value="45">45 Menit (Standar)</option>
+                            <option value="60">60 Menit</option>
+                            <option value="30">30 Menit (Tantangan)</option>
+                            <option value="0">Tanpa Batas Waktu</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mt-4">
+                    <h4 class="text-sm font-semibold text-amber-900 flex items-center gap-2">
+                        <i data-lucide="info" class="w-4 h-4 text-amber-600"></i> Petunjuk Umum Ujian:
+                    </h4>
+                    <ul class="text-xs text-amber-800 space-y-1 mt-2 list-disc list-inside leading-relaxed">
+                        <li>Jumlah soal: <strong>20 soal</strong> (Recount & Narrative Text).</li>
+                        <li>Tipe Soal: <strong>PG</strong> (Pilih 1), <strong>PGK-MCMA</strong> (Centang semua yang benar), & <strong>PGK-Kategori</strong> (Pilih Kategori).</li>
+                        <li>Anda dapat mengubah jawaban atau menandai ragu-ragu kapan saja selama waktu tersisa.</li>
+                    </ul>
+                </div>
+
+                <button type="submit" class="w-full mt-6 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-semibold py-3.5 px-6 rounded-xl shadow-lg shadow-brand-500/25 transition flex items-center justify-center gap-2 text-base">
+                    <span>Mulai Simulasi Sekarang</span>
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+            </form>
+
+            <div class="mt-5 pt-4 border-t border-slate-100 text-center">
+                <button type="button" onclick="openAdminLogin()" class="text-xs text-slate-400 hover:text-indigo-600 font-medium transition flex items-center justify-center gap-1.5 mx-auto">
+                    <i data-lucide="lock" class="w-3.5 h-3.5"></i> Masuk sebagai Guru (Admin)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APPLICATION HEADER -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-4">
+                <!-- Branding -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-brand-600 rounded-lg flex items-center justify-center text-white shadow-md flex-shrink-0">
+                        <i data-lucide="book-open" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-slate-900 text-sm sm:text-base leading-tight">SMAN 1 BANGGAI</h2>
+                        <p class="text-xs text-slate-500 font-medium">SIMULASI TKA BAHASA INGGRIS 2026 <span class="hidden sm:inline">| Guru: Mahfud S. Paukunding, S.Pd., Gr., M.Pd.</span></p>
+                    </div>
+                </div>
+
+                <!-- Center Info: User Profile -->
+                <div class="hidden md:flex items-center gap-4 px-4 py-1.5 bg-slate-100 rounded-full border border-slate-200 text-xs text-slate-700 font-medium">
+                    <span class="flex items-center gap-1.5"><i data-lucide="user" class="w-3.5 h-3.5 text-brand-600"></i> <span id="header-user-name">-</span></span>
+                    <span class="text-slate-300">|</span>
+                    <span class="flex items-center gap-1.5"><i data-lucide="bookmark" class="w-3.5 h-3.5 text-brand-600"></i> <span id="header-user-class">-</span></span>
+                </div>
+
+                <!-- Right Tools: Timer & Finish Button -->
+                <div class="flex items-center gap-3">
+                    <!-- Timer Box -->
+                    <div class="flex items-center gap-2 px-3.5 py-1.5 bg-slate-900 text-white rounded-xl shadow-inner font-mono font-bold text-sm" id="timer-box">
+                        <i data-lucide="clock" class="w-4 h-4 text-amber-400 animate-pulse"></i>
+                        <span id="timer-display">00:00</span>
+                    </div>
+
+                    <!-- Finish Button -->
+                    <button onclick="confirmFinish()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded-xl text-xs sm:text-sm shadow-sm transition flex items-center gap-1.5">
+                        <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                        <span>Selesai Ujian</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN EXAM CONTAINER -->
+    <main id="exam-screen" class="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- LEFT COLUMN: TEXT PASSAGE PANEL (LG: 6 COLS) -->
+        <section class="lg:col-span-6 bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col h-[calc(100vh-140px)] sticky top-20">
+            <!-- Passage Controls Header -->
+            <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/80 rounded-t-2xl">
+                <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-1 bg-brand-100 text-brand-800 text-xs font-bold rounded-lg uppercase tracking-wide" id="passage-part-tag">PART A</span>
+                    <h3 class="font-bold text-slate-800 text-sm sm:text-base truncate max-w-[200px] sm:max-w-xs" id="passage-title">Title Loading...</h3>
+                </div>
+                <!-- Font size controls -->
+                <div class="flex items-center gap-1 bg-white border border-slate-200 rounded-lg p-1 text-xs">
+                    <span class="text-slate-400 px-1 font-semibold">Teks:</span>
+                    <button onclick="changeFontSize(-1)" class="px-2 py-1 hover:bg-slate-100 rounded font-bold text-slate-600" title="Kecilkan Teks">A-</button>
+                    <button onclick="changeFontSize(1)" class="px-2 py-1 hover:bg-slate-100 rounded font-bold text-slate-600" title="Besarkan Teks">A+</button>
+                </div>
+            </div>
+
+            <!-- Passage Content Scrollable Area -->
+            <div id="passage-content-box" class="p-5 sm:p-6 overflow-y-auto flex-1 custom-scrollbar text-slate-700 leading-relaxed text-sm sm:text-base space-y-4">
+                <!-- Passage text injected by JS -->
+            </div>
+
+            <div class="p-3 bg-slate-50 border-t border-slate-100 rounded-b-2xl text-xs text-slate-500 flex justify-between items-center">
+                <span>Bacalah teks dengan cermat sebelum menjawab.</span>
+                <span id="passage-type-badge" class="font-semibold text-slate-600">Recount Text</span>
+            </div>
+        </section>
+
+        <!-- RIGHT COLUMN: QUESTION & NAVIGATION PANEL (LG: 6 COLS) -->
+        <section class="lg:col-span-6 flex flex-col gap-6">
+            
+            <!-- Question Card -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5 sm:p-6">
+                <!-- Question Metadata Header -->
+                <div class="flex items-center justify-between pb-4 border-b border-slate-100 gap-2 flex-wrap">
+                    <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 bg-slate-900 text-white rounded-lg flex items-center justify-center font-bold text-sm" id="q-number-badge">1</span>
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 block uppercase tracking-wider" id="q-competency">Pemahaman Tekstual</span>
+                            <span class="text-xs px-2 py-0.5 bg-indigo-50 text-indigo-700 font-semibold rounded-md border border-indigo-100" id="q-type-badge">Pilihan Ganda</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Ragu-ragu Checkbox -->
+                    <label class="flex items-center gap-2 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 rounded-xl cursor-pointer text-xs font-semibold transition">
+                        <input type="checkbox" id="doubt-checkbox" onchange="toggleDoubt()" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500">
+                        <span>Ragu-ragu</span>
+                    </label>
+                </div>
+
+                <!-- Question Prompt -->
+                <div class="py-4 text-slate-900 font-medium text-sm sm:text-base leading-relaxed" id="question-text">
+                    <!-- Question text injected here -->
+                </div>
+
+                <!-- Question Options Container -->
+                <div id="options-container" class="space-y-3 pt-2">
+                    <!-- Dynamic Options based on type -->
+                </div>
+
+                <!-- Question Footer Navigation Buttons -->
+                <div class="flex items-center justify-between pt-6 mt-6 border-t border-slate-100">
+                    <button onclick="prevQuestion()" id="btn-prev" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold text-sm transition flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed">
+                        <i data-lucide="chevron-left" class="w-4 h-4"></i> Sebelum
+                    </button>
+                    
+                    <span class="text-xs text-slate-400 font-medium">Soal <span id="current-q-num">1</span> dari 20</span>
+
+                    <button onclick="nextQuestion()" id="btn-next" class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm transition shadow-md shadow-brand-500/20 flex items-center gap-1.5">
+                        <span>Berikut</span> <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question Navigation Grid Card -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+                <div class="flex items-center justify-between mb-4">
+                    <h4 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                        <i data-lucide="grid" class="w-4 h-4 text-brand-600"></i> Navigasi Soal
+                    </h4>
+                    <div class="flex items-center gap-3 text-[11px] text-slate-500 font-medium">
+                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-brand-600 inline-block"></span> Terjawab</span>
+                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> Ragu</span>
+                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-200 inline-block"></span> Belum</span>
+                    </div>
+                </div>
+
+                <!-- Grid Buttons -->
+                <div class="grid grid-cols-5 sm:grid-cols-10 gap-2" id="nav-grid">
+                    <!-- 20 grid buttons injected by JS -->
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- RESULT & EVALUATION SCREEN (Hidden initially) -->
+    <main id="result-screen" class="hidden max-w-5xl w-full mx-auto p-4 sm:p-8 space-y-8">
+        <!-- Summary Banner Card -->
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-brand-50 rounded-full blur-3xl -z-0"></div>
+            
+            <div class="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                <div class="md:col-span-8 space-y-3">
+                    <span class="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full uppercase tracking-wider">Hasil Simulasi Selesai</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900" id="result-student-name">Nama Siswa</h2>
+                    <p class="text-slate-500 text-sm" id="result-student-meta">Kelas: XII A | SMA Negeri 1 Banggai</p>
+                    <p class="text-xs text-slate-600 font-medium flex items-center gap-1.5 pt-0.5">
+                        <i data-lucide="user-check" class="w-4 h-4 text-brand-600"></i>
+                        <span>Guru Pengampu: <strong class="text-slate-800">Mahfud S. Paukunding, S.Pd., Gr., M.Pd.</strong></span>
+                    </p>
+                    <div class="flex items-center gap-4 pt-2">
+                        <button onclick="window.print()" class="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-semibold hover:bg-slate-800 transition flex items-center gap-2">
+                            <i data-lucide="printer" class="w-4 h-4"></i> Cetak / Simpan PDF
+                        </button>
+                        <button onclick="restartExam()" class="px-4 py-2 border border-slate-300 text-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-100 transition flex items-center gap-2">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Ulangi Simulasi
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Score Dial Box -->
+                <div class="md:col-span-4 bg-gradient-to-br from-slate-900 to-brand-900 rounded-2xl p-6 text-white text-center shadow-lg">
+                    <span class="text-xs uppercase font-semibold text-slate-300 tracking-wider">Nilai Akhir TKA</span>
+                    <div class="text-5xl font-black my-2 text-amber-400" id="final-score">0</div>
+                    <div class="text-xs text-slate-300" id="score-breakdown">Benar: 0 / 20 Soal</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Review Header -->
+        <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+            <div>
+                <h3 class="text-xl font-bold text-slate-900">Kunci Jawaban & Pembahasan Lengkap</h3>
+                <p class="text-xs text-slate-500">Evaluasi menyeluruh untuk 20 soal simulasi</p>
+            </div>
+            <!-- Filter buttons -->
+            <div class="flex gap-2">
+                <button onclick="filterReview('all')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 text-white" id="filter-btn-all">Semua (20)</button>
+                <button onclick="filterReview('wrong')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-100 text-red-700 hover:bg-red-200" id="filter-btn-wrong">Salah</button>
+            </div>
+        </div>
+
+        <!-- Review Question List -->
+        <div class="space-y-6" id="review-list">
+            <!-- Rendered by JS -->
+        </div>
+
+        <!-- TEACHER SIGNATURE SECTION FOR OFFICIAL PRINT REPORT -->
+        <div class="mt-12 pt-8 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-8 text-center text-xs font-medium">
+            <div class="space-y-1">
+                <p class="text-slate-500">Siswa / Peserta Simulasi,</p>
+                <div class="h-16"></div>
+                <p class="font-bold text-slate-900 underline" id="print-student-name">-</p>
+                <p class="text-slate-500 text-[11px]">SMA Negeri 1 Banggai</p>
+            </div>
+            <div class="space-y-1">
+                <p class="text-slate-500">Banggai, <span id="print-date"></span></p>
+                <p class="font-bold text-slate-800">Guru Mata Pelajaran Bahasa Inggris,</p>
+                <div class="h-16"></div>
+                <p class="font-bold text-slate-900 underline">Mahfud S. Paukunding, S.Pd., Gr., M.Pd.</p>
+                <p class="text-slate-500 text-[11px]">Guru SMAN 1 Banggai</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- CONFIRMATION MODAL -->
+    <div id="finish-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 text-center space-y-4">
+            <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto">
+                <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900">Konfirmasi Selesai Ujian</h3>
+            <p class="text-sm text-slate-600" id="modal-status-text">Apakah Anda yakin ingin menyelesaikan simulasi ini?</p>
+            
+            <div class="flex gap-3 pt-2">
+                <button onclick="closeFinishModal()" class="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-semibold text-sm hover:bg-slate-50 transition">Kembali</button>
+                <button onclick="submitExam()" class="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm shadow-md transition">Ya, Selesaikan</button>
+            </div>
+        </div>
+    </div>
+
+    <main id="admin-screen" class="hidden flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 flex flex-col gap-6 pt-10 sm:pt-20">
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 p-4 sm:p-8 relative overflow-hidden">
+            <div class="absolute -right-20 -top-20 w-64 h-64 bg-indigo-50 rounded-full blur-3xl -z-0"></div>
+            <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 border-b border-slate-100 pb-4 gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center shadow-lg">
+                        <i data-lucide="shield-check" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Dashboard Rekap Nilai</h2>
+                        <p class="text-xs sm:text-sm text-slate-500">Guru Pengampu: Mahfud S. Paukunding</p>
+                    </div>
+                </div>
+                <button onclick="logoutAdmin()" class="px-4 py-2 bg-white border border-red-200 text-red-600 hover:bg-red-50 rounded-xl text-sm font-semibold transition flex items-center gap-2 shadow-sm">
+                    <i data-lucide="log-out" class="w-4 h-4"></i> Keluar Dashboard
+                </button>
+            </div>
+
+            <div class="overflow-x-auto relative z-10 rounded-xl border border-slate-200">
+                <table class="w-full text-left border-collapse min-w-[600px]">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider">
+                            <th class="p-3 font-semibold w-40">Waktu Selesai</th>
+                            <th class="p-3 font-semibold">Nama Siswa</th>
+                            <th class="p-3 font-semibold w-24">Kelas</th>
+                            <th class="p-3 font-semibold text-center w-28">Skor Akhir</th>
+                            <th class="p-3 font-semibold text-center w-32">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-table-body" class="bg-white">
+                        <tr><td colspan="5" class="text-center p-8 text-slate-500 flex items-center justify-center gap-2"><i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Memuat data dari server...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- ADMIN LOGIN MODAL -->
+    <div id="admin-login-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center animate-fade-in border border-slate-100">
+            <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="key" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-1">Login Admin</h3>
+            <p class="text-xs text-slate-500 mb-5">Masukkan kata sandi guru untuk melihat rekapan hasil siswa.</p>
+            <input type="password" id="admin-password" onkeypress="if(event.key === 'Enter') checkAdminLogin()" placeholder="Masukkan kata sandi..." class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none mb-5 text-center font-medium">
+            <div class="flex gap-2">
+                <button onclick="closeAdminLogin()" class="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-semibold text-sm hover:bg-slate-50 transition">Batal</button>
+                <button onclick="checkAdminLogin()" class="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md transition">Masuk</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- REUSABLE MESSAGE MODAL -->
+    <div id="message-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center border border-slate-100 animate-fade-in">
+            <div class="w-12 h-12 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="info" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2" id="message-title">Info</h3>
+            <p class="text-sm text-slate-600 mb-6" id="message-body">Pesan</p>
+            <button onclick="closeMessageModal()" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm transition shadow-md">Mengerti</button>
+        </div>
+    </div>
+
+    <!-- GENERIC CONFIRM MODAL -->
+    <div id="generic-confirm-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center border border-slate-100 animate-fade-in">
+            <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="help-circle" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2" id="confirm-title">Konfirmasi</h3>
+            <p class="text-sm text-slate-600 mb-6" id="confirm-body">Pesan</p>
+            <div class="flex gap-3">
+                <button onclick="closeGenericConfirm()" class="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-semibold text-sm hover:bg-slate-50 transition">Batal</button>
+                <button id="confirm-yes-btn" class="flex-1 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm shadow-md transition">Ya</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'simulasi-tka-banggai';
+        let firebaseConfig = {};
+        try {
+            firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "demo", projectId: "demo-project" };
+        } catch (e) { console.error("Firebase config parse error", e); }
+
+        if (firebaseConfig && Object.keys(firebaseConfig).length > 0) {
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            const auth = getAuth(app);
+
+            window.firebaseDB = db;
+            window.firebaseAppId = appId;
+            window.firebaseAuth = auth;
+            window.firebaseCollection = collection;
+            window.firebaseAddDoc = addDoc;
+            window.firebaseOnSnapshot = onSnapshot;
+            window.firebaseQuery = query;
+
+            async function initAuth() {
+                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                try {
+                    if (initialAuthToken) {
+                        await signInWithCustomToken(auth, initialAuthToken);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    window.isFirebaseReady = true;
+                    // Jika admin screen sedang terbuka saat load, jalankan listener
+                    if (!document.getElementById('admin-screen').classList.contains('hidden')) {
+                        if(window.startAdminListener) window.startAdminListener();
+                    }
+                } catch (e) {
+                    console.error("Firebase Auth Error:", e);
+                }
+            }
+            initAuth();
+        } else {
+            console.warn("Firebase belum terkonfigurasi. Data akan disimpan lokal.");
+        }
+    </script>
+
+    <script>
+        /* EXAM QUESTION DATABASE (FULL 20 QUESTIONS) */
+        const examPassages = {
+            "TEXT1": {
+                part: "PART A — RECOUNT TEXT",
+                type: "Recount Text",
+                title: "TEXT 1: A Journey That Changed My Perspective",
+                content: `
+                    <p>Last year, I had an opportunity to join a student cultural exchange program organized by several schools in Central Sulawesi. I initially thought the program would simply be a short trip to another town, but it turned out to be one of the most meaningful experiences of my high school life.</p>
+                    <p>Our group traveled from Banggai to Luwuk and then continued to a rural community near the coast. We stayed with local families for four days. On the first day, I felt uncomfortable because everything was unfamiliar. The house was much simpler than my home, and there was limited internet access. I wondered how I would spend four days without constantly checking my phone.</p>
+                    <p>The next morning, however, my host family invited me to help them prepare food before going to their garden. I learned how they grew vegetables and managed their daily activities. In the afternoon, I joined several local students to clean a beach near their village. We collected plastic bottles, food wrappers, and other waste that had been carried onto the shore by the waves.</p>
+                    <p>What surprised me most was how seriously the students cared about their environment. They did not wait for an official program or an adult to tell them what to do. They organized regular clean-up activities themselves.</p>
+                    <p>On the final evening, our group discussed what we had learned. I realized that having fewer modern facilities did not necessarily mean having a poorer quality of life. The people in the village had strong relationships, cooperated with one another, and cared deeply about their surroundings.</p>
+                    <p>When I returned home, I changed some of my daily habits. I reduced my use of single-use plastic and became more willing to participate in community activities.</p>
+                    <p>The trip was short, but its impact lasted much longer.</p>
+                `
+            },
+            "TEXT2": {
+                part: "PART A — RECOUNT TEXT",
+                type: "Recount Text",
+                title: "TEXT 2: My First Student Research Project",
+                content: `
+                    <p>During my final year of high school, I participated in a student research project about the use of plastic waste in our school environment. I had never conducted formal research before, so I initially felt that the project would be difficult.</p>
+                    <p>Our teacher divided us into small groups. My group decided to investigate how students disposed of plastic bottles after school activities. We began by observing several areas around the school and recording the amount of plastic waste we found.</p>
+                    <p>At first, our observations were inconsistent. Different group members recorded information in different ways, making it difficult to compare the results. Our teacher noticed the problem and suggested that we create a simple observation sheet. The sheet included the location, type of waste, estimated amount, and time of observation.</p>
+                    <p>After using the new format, our data became much more organized. We discovered that most plastic bottles were found near areas where students usually gathered during breaks and extracurricular activities.</p>
+                    <p>We then interviewed several students. Many said that they understood the importance of reducing plastic waste, but they often chose convenience when disposing of their rubbish. Some students also said that trash bins were not always located near activity areas.</p>
+                    <p>Based on our findings, we proposed placing additional recycling bins in strategic locations and conducting short environmental campaigns during school events.</p>
+                    <p>The project taught me that solving a problem requires more than simply identifying it. We needed reliable information before proposing a solution. I also learned that mistakes during research could be useful if we were willing to recognize and correct them.</p>
+                    <p>Although our project was only a school assignment, it changed the way I looked at everyday problems. I began asking not only what was happening, but also why it was happening and what evidence could support a possible solution.</p>
+                `
+            },
+            "TEXT3": {
+                part: "PART B — NARRATIVE TEXT",
+                type: "Narrative Text",
+                title: "TEXT 3: The Fisherman and the Hidden Path",
+                content: `
+                    <p>Many years ago, in a small coastal village, there lived a young fisherman named Raka. He was known for being hardworking, but he was also impatient. Whenever his fishing trips produced only a small catch, he complained that the sea was unfair.</p>
+                    <p>One morning, an elderly fisherman named Danu told Raka about a hidden path through the hills. According to Danu, the path led to a quiet bay where fish were often abundant.</p>
+                    <p>Raka became excited. He believed that finding the bay would make him a successful fisherman. Without asking further questions, he immediately followed the path.</p>
+                    <p>The journey was difficult. The path was narrow and covered with fallen leaves. Several times, Raka nearly lost his balance. After walking for hours, he finally reached a beautiful bay. The water was clear, and he could see many fish near the rocks.</p>
+                    <p>However, Raka soon noticed something unusual. The entrance to the bay was blocked by a large fallen tree. He tried to move it alone, but it was too heavy. He became frustrated and kicked the tree.</p>
+                    <p>Suddenly, he remembered Danu's words: “A good fisherman does not only know where the fish are. He also knows when to ask for help.”</p>
+                    <p>Raka returned to the village and told several fishermen about the bay. The next morning, they went together and removed the fallen tree.</p>
+                    <p>The fishermen then agreed to use the bay carefully. They decided not to catch too many fish and avoided damaging the surrounding coral.</p>
+                    <p>Raka eventually became one of the most respected fishermen in the village. He still remembered how impatient he had been when he first discovered the bay.</p>
+                    <p>He learned that success was not simply about finding an opportunity. It was also about using it responsibly and knowing when individual effort was not enough.</p>
+                `
+            },
+            "TEXT4": {
+                part: "PART B — NARRATIVE TEXT",
+                type: "Narrative Text",
+                title: "TEXT 4: The Weaver's Promise",
+                content: `
+                    <p>Once, in a quiet village surrounded by green hills, there lived a young weaver named Lestari. She was famous for producing beautiful woven cloth. Her designs were simple but distinctive, and many people from neighboring villages admired her work.</p>
+                    <p>One year, a wealthy merchant came to the village. He offered Lestari a large amount of money if she could produce fifty pieces of cloth in only ten days.</p>
+                    <p>Lestari knew the order was nearly impossible to complete alone. Nevertheless, she accepted it because her family needed money to repair their damaged house.</p>
+                    <p>For several days, she worked from early morning until late at night. She became exhausted, but she refused to ask anyone for help. She believed that accepting assistance would make her work less valuable.</p>
+                    <p>On the seventh day, Lestari became seriously tired and accidentally damaged several pieces of cloth. She sat silently in her workshop, feeling disappointed.</p>
+                    <p>Her grandmother came to see her. After listening to Lestari's story, the grandmother said, “A craft does not become less valuable because many caring hands help create it.”</p>
+                    <p>Lestari finally understood the meaning of her grandmother's words. The next morning, she asked several experienced weavers in the village to help her. They agreed because they respected her skill and generosity.</p>
+                    <p>Together, they completed the order on time. When the merchant saw the finished cloth, he was impressed not only by the quality but also by the cooperation behind the work.</p>
+                    <p>Instead of paying Lestari alone, the merchant gave additional money and asked her to establish a small weaving group in the village.</p>
+                    <p>Lestari used the money to repair her family's house and purchased materials for the group.</p>
+                    <p>Years later, the weaving group became an important source of income for many families.</p>
+                    <p>Lestari eventually realized that her greatest achievement was not completing the fifty pieces of cloth. It was learning that knowledge and skills become more valuable when they are shared with others.</p>
+                `
+            }
+        };
+
+        const examQuestions = [
+            // SOAL 1
+            {
+                id: 1,
+                passageKey: "TEXT1",
+                competency: "Pemahaman Tekstual (Mengidentifikasi informasi tersurat)",
+                type: "PG",
+                prompt: "Why did the writer initially feel uncomfortable during the exchange program?",
+                options: [
+                    { key: "A", text: "The writer did not like the local students." },
+                    { key: "B", text: "The writer had difficulty communicating with the host family." },
+                    { key: "C", text: "The writer found the unfamiliar environment and limited internet access challenging." },
+                    { key: "D", text: "The writer was asked to work in the garden every morning." },
+                    { key: "E", text: "The writer wanted to return home immediately." }
+                ],
+                key: "C",
+                explanation: "Teks menyatakan bahwa lingkungan baru dan keterbatasan akses internet membuat penulis merasa tidak nyaman pada awalnya (Paragraf 2)."
+            },
+            // SOAL 2
+            {
+                id: 2,
+                passageKey: "TEXT1",
+                competency: "Pemahaman Inferensial (Menyimpulkan hubungan sebab-akibat)",
+                type: "PG",
+                prompt: "Why did the writer eventually change some daily habits after returning home?",
+                options: [
+                    { key: "A", text: "The host family asked the writer to do so." },
+                    { key: "B", text: "The writer became aware of the environmental problems caused by daily habits." },
+                    { key: "C", text: "The writer wanted to impress the local students." },
+                    { key: "D", text: "The school required all participants to change their lifestyles." },
+                    { key: "E", text: "The writer no longer wanted to use the internet." }
+                ],
+                key: "B",
+                explanation: "Pengalaman membersihkan pantai dan melihat kepedulian siswa terhadap lingkungan membuat penulis menyadari dampak kebiasaan sehari-hari."
+            },
+            // SOAL 3
+            {
+                id: 3,
+                passageKey: "TEXT1",
+                competency: "Pemahaman Inferensial (Menyimpulkan informasi tersirat)",
+                type: "PGK-MCMA",
+                prompt: "Which statements can be inferred from the text? (Pilih semua jawaban yang benar)",
+                options: [
+                    { key: "A", text: "The writer's initial assumptions about rural life changed during the program." },
+                    { key: "B", text: "The local students demonstrated environmental responsibility." },
+                    { key: "C", text: "The writer considered access to modern facilities the most important part of life." },
+                    { key: "D", text: "Direct experience influenced the writer's attitude." },
+                    { key: "E", text: "The exchange program was mainly intended to teach students how to use social media." }
+                ],
+                key: ["A", "B", "D"],
+                explanation: "Penulis mengubah pandangannya tentang kehidupan pedesaan (A), melihat kepedulian lingkungan siswa lokal (B), dan mengubah perilakunya setelah memperoleh pengalaman langsung (D)."
+            },
+            // SOAL 4
+            {
+                id: 4,
+                passageKey: "TEXT1",
+                competency: "Evaluasi dan Apresiasi (Menilai pesan atau gagasan teks)",
+                type: "PG",
+                prompt: "Which statement best represents the main message of the text?",
+                options: [
+                    { key: "A", text: "Rural communities should receive more modern technology." },
+                    { key: "B", text: "Traveling is the best way to become popular among students." },
+                    { key: "C", text: "Meaningful experiences can challenge assumptions and change personal behavior." },
+                    { key: "D", text: "Students should avoid using the internet while traveling." },
+                    { key: "E", text: "Community activities are only useful in rural areas." }
+                ],
+                key: "C",
+                explanation: "Gagasan utama recount bukan sekadar perjalanan, melainkan bagaimana pengalaman tersebut mengubah asumsi dan perilaku penulis."
+            },
+            // SOAL 5
+            {
+                id: 5,
+                passageKey: "TEXT1",
+                competency: "Evaluasi dan Apresiasi (Menilai perubahan sikap tokoh)",
+                type: "PGK-Kategori",
+                prompt: "Determine whether each statement describes the writer's attitude BEFORE or AFTER the experience.",
+                statements: [
+                    { id: "s1", text: "The writer felt that limited internet access would be difficult." },
+                    { id: "s2", text: "The writer became more concerned about environmental issues." },
+                    { id: "s3", text: "The writer viewed the trip as potentially meaningful from the beginning." },
+                    { id: "s4", text: "The writer became more willing to participate in community activities." }
+                ],
+                categories: ["BEFORE", "AFTER"],
+                key: {
+                    s1: "BEFORE",
+                    s2: "AFTER",
+                    s3: "BEFORE",
+                    s4: "AFTER"
+                },
+                explanation: "A — Before; B — After; C — Before; D — After. Perubahan sikap penulis terjadi sejak sebelum hingga setelah mengikuti program."
+            },
+            // SOAL 6
+            {
+                id: 6,
+                passageKey: "TEXT2",
+                competency: "Pemahaman Tekstual",
+                type: "PG",
+                prompt: "What problem did the group encounter at the beginning of the research?",
+                options: [
+                    { key: "A", text: "They could not find enough plastic waste." },
+                    { key: "B", text: "They had difficulty interviewing students." },
+                    { key: "C", text: "Their observation methods were inconsistent." },
+                    { key: "D", text: "Their teacher rejected their research topic." },
+                    { key: "E", text: "Students refused to participate." }
+                ],
+                key: "C",
+                explanation: "Masalah awal penelitian adalah setiap anggota kelompok menggunakan cara pencatatan yang berbeda (inconsistent observation methods)."
+            },
+            // SOAL 7
+            {
+                id: 7,
+                passageKey: "TEXT2",
+                competency: "Pemahaman Inferensial",
+                type: "PG",
+                prompt: "Why did the teacher suggest creating an observation sheet?",
+                options: [
+                    { key: "A", text: "To make the research look more formal." },
+                    { key: "B", text: "To make the collected information more consistent and easier to compare." },
+                    { key: "C", text: "To reduce the number of students in the research group." },
+                    { key: "D", text: "To replace interviews with observations." },
+                    { key: "E", text: "To make students spend less time at school." }
+                ],
+                key: "B",
+                explanation: "Observation sheet membuat data lebih terstruktur, konsisten, dan mudah dibandingkan."
+            },
+            // SOAL 8
+            {
+                id: 8,
+                passageKey: "TEXT2",
+                competency: "Pemahaman Inferensial",
+                type: "PGK-MCMA",
+                prompt: "Which conclusions are supported by the research? (Pilih semua jawaban yang benar)",
+                options: [
+                    { key: "A", text: "Some students understood environmental issues but did not always act accordingly." },
+                    { key: "B", text: "The location of trash bins could influence students' disposal behavior." },
+                    { key: "C", text: "Students completely ignored environmental problems." },
+                    { key: "D", text: "Evidence was necessary before proposing solutions." },
+                    { key: "E", text: "The group immediately found the correct solution without making mistakes." }
+                ],
+                key: ["A", "B", "D"],
+                explanation: "Teks menunjukkan kesenjangan pemahaman & perilaku (A), pengaruh lokasi tempat sampah (B), serta pentingnya bukti data sebelum menentukan solusi (D)."
+            },
+            // SOAL 9
+            {
+                id: 9,
+                passageKey: "TEXT2",
+                competency: "Evaluasi dan Apresiasi",
+                type: "PG",
+                prompt: "Which statement best describes the writer's development throughout the experience?",
+                options: [
+                    { key: "A", text: "The writer became less interested in solving problems." },
+                    { key: "B", text: "The writer moved from uncertainty toward a more evidence-based way of thinking." },
+                    { key: "C", text: "The writer learned that research was unnecessary for school projects." },
+                    { key: "D", text: "The writer became convinced that every problem has a simple solution." },
+                    { key: "E", text: "The writer decided to avoid group work in the future." }
+                ],
+                key: "B",
+                explanation: "Penulis berkembang dari seseorang yang ragu/belum yakin menjadi lebih terbiasa menggunakan bukti untuk memahami masalah."
+            },
+            // SOAL 10
+            {
+                id: 10,
+                passageKey: "TEXT2",
+                competency: "Evaluasi dan Apresiasi",
+                type: "PGK-Kategori",
+                prompt: "Classify each statement as SUPPORTED BY THE TEXT or NOT SUPPORTED BY THE TEXT.",
+                statements: [
+                    { id: "s1", text: "The group modified its method after identifying a problem." },
+                    { id: "s2", text: "The research findings were used to propose practical solutions." },
+                    { id: "s3", text: "The teacher completed most of the research for the students." },
+                    { id: "s4", text: "The experience influenced the writer's approach to everyday problems." }
+                ],
+                categories: ["Supported", "Not Supported"],
+                key: {
+                    s1: "Supported",
+                    s2: "Supported",
+                    s3: "Not Supported",
+                    s4: "Supported"
+                },
+                explanation: "Guru hanya memberikan arahan, penelitian tetap dilakukan oleh siswa sendiri."
+            },
+            // SOAL 11
+            {
+                id: 11,
+                passageKey: "TEXT3",
+                competency: "Pemahaman Tekstual",
+                type: "PG",
+                prompt: "Why did Raka go through the hidden path?",
+                options: [
+                    { key: "A", text: "He wanted to find a shortcut to another village." },
+                    { key: "B", text: "He wanted to discover a place with abundant fish." },
+                    { key: "C", text: "He wanted to visit Danu's house." },
+                    { key: "D", text: "He wanted to collect wood from the hills." },
+                    { key: "E", text: "He wanted to explore the forest." }
+                ],
+                key: "B",
+                explanation: "Raka mengikuti petunjuk Danu karena ingin menemukan teluk yang memiliki banyak ikan."
+            },
+            // SOAL 12
+            {
+                id: 12,
+                passageKey: "TEXT3",
+                competency: "Pemahaman Inferensial",
+                type: "PG",
+                prompt: "What can be inferred about Raka's character at the beginning of the story?",
+                options: [
+                    { key: "A", text: "He was patient and careful." },
+                    { key: "B", text: "He was cautious but inexperienced." },
+                    { key: "C", text: "He was hardworking but tended to act without thinking carefully." },
+                    { key: "D", text: "He was selfish and dishonest." },
+                    { key: "E", text: "He was afraid of taking risks." }
+                ],
+                key: "C",
+                explanation: "Raka digambarkan sebagai pekerja keras tetapi tidak sabar dan cenderung bertindak terburu-buru."
+            },
+            // SOAL 13
+            {
+                id: 13,
+                passageKey: "TEXT3",
+                competency: "Pemahaman Inferensial",
+                type: "PGK-MCMA",
+                prompt: "Which events contributed to Raka's change? (Pilih semua jawaban yang benar)",
+                options: [
+                    { key: "A", text: "He failed to move the fallen tree by himself." },
+                    { key: "B", text: "He remembered Danu's advice." },
+                    { key: "C", text: "He returned to the village to seek help." },
+                    { key: "D", text: "He caught more fish than all the other fishermen." },
+                    { key: "E", text: "He realized that the bay needed to be used responsibly." }
+                ],
+                key: ["A", "B", "C", "E"],
+                explanation: "Kegagalan memindahkan pohon sendiri (A), mengingat nasihat Danu (B), meminta bantuan (C), dan menyadari pentingnya menjaga teluk (E) membuat Raka berubah."
+            },
+            // SOAL 14
+            {
+                id: 14,
+                passageKey: "TEXT3",
+                competency: "Evaluasi dan Apresiasi",
+                type: "PG",
+                prompt: "What does the fallen tree most likely symbolize in the story?",
+                options: [
+                    { key: "A", text: "The wealth that Raka wanted to obtain." },
+                    { key: "B", text: "An obstacle that teaches Raka the limits of individual effort." },
+                    { key: "C", text: "The danger of visiting the sea." },
+                    { key: "D", text: "The failure of the village fishermen." },
+                    { key: "E", text: "The importance of avoiding new opportunities." }
+                ],
+                key: "B",
+                explanation: "Pohon tumbang menjadi simbol hambatan yang menunjukkan bahwa kemampuan individu memiliki batas."
+            },
+            // SOAL 15
+            {
+                id: 15,
+                passageKey: "TEXT3",
+                competency: "Evaluasi dan Apresiasi",
+                type: "PGK-Kategori",
+                prompt: "Determine whether each statement represents Raka's OLD ATTITUDE or Raka's NEW ATTITUDE.",
+                statements: [
+                    { id: "s1", text: "He believed success depended mainly on his own ability." },
+                    { id: "s2", text: "He was willing to ask other fishermen for assistance." },
+                    { id: "s3", text: "He became concerned about using natural resources responsibly." },
+                    { id: "s4", text: "He believed that every opportunity should be taken without considering consequences." }
+                ],
+                categories: ["Old Attitude", "New Attitude"],
+                key: {
+                    s1: "Old Attitude",
+                    s2: "New Attitude",
+                    s3: "New Attitude",
+                    s4: "Old Attitude"
+                },
+                explanation: "A — Old; B — New; C — New; D — Old. Perubahan tersebut menunjukkan perkembangan karakter Raka."
+            },
+            // SOAL 16
+            {
+                id: 16,
+                passageKey: "TEXT4",
+                competency: "Pemahaman Tekstual",
+                type: "PG",
+                prompt: "Why did Lestari initially refuse to ask other people for help?",
+                options: [
+                    { key: "A", text: "She did not know any other weavers." },
+                    { key: "B", text: "She believed that accepting help would reduce the value of her work." },
+                    { key: "C", text: "She wanted to give the merchant a lower-quality product." },
+                    { key: "D", text: "Her grandmother told her to work alone." },
+                    { key: "E", text: "The villagers disliked her." }
+                ],
+                key: "B",
+                explanation: "Lestari awalnya berpikir bahwa menerima bantuan akan mengurangi nilai hasil kerjanya (accepting assistance would make her work less valuable)."
+            },
+            // SOAL 17
+            {
+                id: 17,
+                passageKey: "TEXT4",
+                competency: "Pemahaman Inferensial",
+                type: "PG",
+                prompt: "What can be inferred from the grandmother's statement?",
+                options: [
+                    { key: "A", text: "Traditional crafts should never be changed." },
+                    { key: "B", text: "Working with others can strengthen rather than weaken the value of a person's work." },
+                    { key: "C", text: "Lestari should stop producing woven cloth." },
+                    { key: "D", text: "Wealth is more important than skill." },
+                    { key: "E", text: "The merchant was unfair to Lestari." }
+                ],
+                key: "B",
+                explanation: "Nasihat nenek menekankan bahwa kerja sama dan keterlibatan orang lain dapat memperkuat nilai suatu karya."
+            },
+            // SOAL 18
+            {
+                id: 18,
+                passageKey: "TEXT4",
+                competency: "Pemahaman Inferensial",
+                type: "PGK-MCMA",
+                prompt: "Which consequences resulted from Lestari's decision to cooperate with other weavers? (Pilih semua jawaban yang benar)",
+                options: [
+                    { key: "A", text: "The order was completed on time." },
+                    { key: "B", text: "The merchant recognized the value of their cooperation." },
+                    { key: "C", text: "Lestari received additional financial support." },
+                    { key: "D", text: "The village developed a sustainable weaving group." },
+                    { key: "E", text: "Lestari stopped working as a weaver." }
+                ],
+                key: ["A", "B", "C", "D"],
+                explanation: "Kerja sama membuat pesanan selesai (A), dihargai pedagang (B), menghasilkan dukungan finansial tambahan (C), dan membentuk kelompok tenun (D)."
+            },
+            // SOAL 19
+            {
+                id: 19,
+                passageKey: "TEXT4",
+                competency: "Evaluasi dan Apresiasi",
+                type: "PG",
+                prompt: "Which theme is most strongly developed in the story?",
+                options: [
+                    { key: "A", text: "Individual success is always better than cooperation." },
+                    { key: "B", text: "Wealth can solve every family problem." },
+                    { key: "C", text: "Sharing skills and cooperating with others can create broader benefits." },
+                    { key: "D", text: "Traditional occupations should be replaced by modern jobs." },
+                    { key: "E", text: "People should never accept difficult challenges." }
+                ],
+                key: "C",
+                explanation: "Tema utama cerita adalah manfaat berbagi keterampilan dan bekerja sama bagi individu maupun masyarakat."
+            },
+            // SOAL 20
+            {
+                id: 20,
+                passageKey: "TEXT4",
+                competency: "Evaluasi dan Apresiasi",
+                type: "PGK-MCMA",
+                prompt: "Which statements best express the moral values of the story? (Pilih semua jawaban yang benar)",
+                options: [
+                    { key: "A", text: "Asking for help is not necessarily a sign of weakness." },
+                    { key: "B", text: "Skills can create greater benefits when shared with others." },
+                    { key: "C", text: "Personal success should always be prioritized over community welfare." },
+                    { key: "D", text: "Cooperation can turn an individual opportunity into a wider community benefit." },
+                    { key: "E", text: "Difficult tasks should be rejected whenever they require teamwork." }
+                ],
+                key: ["A", "B", "D"],
+                explanation: "Meminta bantuan bukan kelemahan (A), keterampilan bermanfaat saat dibagikan (B), dan kerja sama menghasilkan manfaat yang luas bagi komunitas (D)."
+            }
+        ];
+
+        let studentData = {
+            name: "",
+            class: "XII A",
+            duration: 45
+        };
+
+        let currentQuestionIndex = 0;
+        let userAnswers = {}; // { qId: answerValue }
+        let userDoubts = {};   // { qId: boolean }
+        let timerSeconds = 0;
+        let timerInterval = null;
+        let passageFontSize = 15; // px
+
+        // Initialize icons on load
+        window.onload = function() {
+            lucide.createIcons();
+        };
+
+        function startExam(e) {
+            e.preventDefault();
+            const nameInput = document.getElementById('student-name').value.trim();
+            const classInput = document.getElementById('student-class').value;
+            const durationInput = parseInt(document.getElementById('exam-duration').value);
+
+            if (!nameInput) return;
+
+            studentData.name = nameInput;
+            studentData.class = classInput;
+            studentData.duration = durationInput;
+
+            document.getElementById('header-user-name').innerText = studentData.name;
+            document.getElementById('header-user-class').innerText = studentData.class;
+
+            // Setup timer
+            if (studentData.duration > 0) {
+                timerSeconds = studentData.duration * 60;
+                startTimer();
+            } else {
+                document.getElementById('timer-display').innerText = "UNLIMITED";
+            }
+
+            // Hide Welcome Modal
+            document.getElementById('welcome-modal').classList.add('hidden');
+
+            // Render Nav Grid & First Question
+            renderNavGrid();
+            loadQuestion(0);
+        }
+
+        function startTimer() {
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                if (timerSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    showMessage("Waktu Habis", "Waktu simulasi telah habis! Sistem akan secara otomatis mengumpulkan jawaban Anda.", () => {
+                        submitExam();
+                    });
+                } else {
+                    timerSeconds--;
+                    updateTimerDisplay();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
+            const s = (timerSeconds % 60).toString().padStart(2, '0');
+            document.getElementById('timer-display').innerText = `${m}:${s}`;
+        }
+
+        function loadQuestion(index) {
+            currentQuestionIndex = index;
+            const q = examQuestions[index];
+            const passage = examPassages[q.passageKey];
+
+            // Render Passage
+            document.getElementById('passage-part-tag').innerText = passage.part;
+            document.getElementById('passage-title').innerText = passage.title;
+            document.getElementById('passage-type-badge').innerText = passage.type;
+            const pContentBox = document.getElementById('passage-content-box');
+            pContentBox.innerHTML = passage.content;
+            pContentBox.style.fontSize = passageFontSize + 'px';
+
+            // Render Question Header
+            document.getElementById('q-number-badge').innerText = q.id;
+            document.getElementById('current-q-num').innerText = q.id;
+            document.getElementById('q-competency').innerText = q.competency;
+            
+            let typeLabel = "Pilihan Ganda (PG)";
+            if (q.type === "PGK-MCMA") typeLabel = "Pilihan Ganda Kompleks (Centang Banyak)";
+            if (q.type === "PGK-Kategori") typeLabel = "Pilihan Ganda Kompleks (Kategori)";
+            document.getElementById('q-type-badge').innerText = typeLabel;
+
+            // Set Ragu-ragu checkbox
+            document.getElementById('doubt-checkbox').checked = !!userDoubts[q.id];
+
+            // Render Question Prompt
+            document.getElementById('question-text').innerText = q.prompt;
+
+            // Render Options
+            const optsContainer = document.getElementById('options-container');
+            optsContainer.innerHTML = '';
+
+            if (q.type === 'PG') {
+                q.options.forEach(opt => {
+                    const isSelected = userAnswers[q.id] === opt.key;
+                    const optEl = document.createElement('div');
+                    optEl.className = `p-3.5 rounded-xl border border-slate-200 hover:border-brand-500 hover:bg-brand-50/50 cursor-pointer transition flex items-start gap-3 ${isSelected ? 'border-brand-600 bg-brand-50/80 ring-2 ring-brand-500/20' : 'bg-white'}`;
+                    optEl.onclick = () => selectPGAccess(q.id, opt.key);
+
+                    optEl.innerHTML = `
+                        <div class="w-6 h-6 rounded-full border border-slate-300 flex items-center justify-center text-xs font-bold ${isSelected ? 'bg-brand-600 text-white border-brand-600' : 'text-slate-600'}">
+                            ${opt.key}
+                        </div>
+                        <div class="text-xs sm:text-sm text-slate-800 pt-0.5 leading-snug">${opt.text}</div>
+                    `;
+                    optsContainer.appendChild(optEl);
+                });
+            } 
+            else if (q.type === 'PGK-MCMA') {
+                const currentSelections = userAnswers[q.id] || [];
+                q.options.forEach(opt => {
+                    const isChecked = currentSelections.includes(opt.key);
+                    const optEl = document.createElement('div');
+                    optEl.className = `p-3.5 rounded-xl border border-slate-200 hover:border-brand-500 hover:bg-brand-50/50 cursor-pointer transition flex items-start gap-3 ${isChecked ? 'border-brand-600 bg-brand-50/80 ring-2 ring-brand-500/20' : 'bg-white'}`;
+                    optEl.onclick = () => toggleMCMAAccess(q.id, opt.key);
+
+                    optEl.innerHTML = `
+                        <div class="w-5 h-5 rounded border border-slate-300 mt-0.5 flex items-center justify-center text-xs font-bold ${isChecked ? 'bg-brand-600 text-white border-brand-600' : 'text-slate-400'}">
+                            ${isChecked ? '✓' : ''}
+                        </div>
+                        <div class="text-xs sm:text-sm text-slate-800 leading-snug"><span class="font-bold text-slate-600 me-1">${opt.key}.</span> ${opt.text}</div>
+                    `;
+                    optsContainer.appendChild(optEl);
+                });
+            }
+            else if (q.type === 'PGK-Kategori') {
+                const currentCat = userAnswers[q.id] || {};
+                const table = document.createElement('div');
+                table.className = "overflow-x-auto border border-slate-200 rounded-xl";
+                
+                let rowsHtml = q.statements.map((stmt, idx) => {
+                    const selectedVal = currentCat[stmt.id];
+                    return `
+                        <tr class="${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'} border-t border-slate-200">
+                            <td class="p-3 text-xs sm:text-sm text-slate-800">${stmt.text}</td>
+                            ${q.categories.map(cat => `
+                                <td class="p-3 text-center border-l border-slate-200">
+                                    <input type="radio" name="cat_${q.id}_${stmt.id}" value="${cat}" 
+                                        ${selectedVal === cat ? 'checked' : ''} 
+                                        onchange="selectCategoryAccess(${q.id}, '${stmt.id}', '${cat}')"
+                                        class="w-4 h-4 text-brand-600 cursor-pointer">
+                                </td>
+                            `).join('')}
+                        </tr>
+                    `;
+                }).join('');
+
+                table.innerHTML = `
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 text-xs font-bold">
+                                <th class="p-3">Pernyataan</th>
+                                ${q.categories.map(cat => `<th class="p-3 text-center w-28 sm:w-36 border-l border-slate-200">${cat}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>${rowsHtml}</tbody>
+                    </table>
+                `;
+                optsContainer.appendChild(table);
+            }
+
+            // Update Prev/Next Buttons
+            document.getElementById('btn-prev').disabled = index === 0;
+            const btnNext = document.getElementById('btn-next');
+            if (index === examQuestions.length - 1) {
+                btnNext.innerHTML = `<span>Selesai</span> <i data-lucide="check" class="w-4 h-4"></i>`;
+                btnNext.onclick = confirmFinish;
+            } else {
+                btnNext.innerHTML = `<span>Berikut</span> <i data-lucide="chevron-right" class="w-4 h-4"></i>`;
+                btnNext.onclick = nextQuestion;
+            }
+
+            updateNavGridVisuals();
+            lucide.createIcons();
+        }
+
+        function selectPGAccess(qId, key) {
+            userAnswers[qId] = key;
+            loadQuestion(currentQuestionIndex);
+        }
+
+        function toggleMCMAAccess(qId, key) {
+            if (!userAnswers[qId]) userAnswers[qId] = [];
+            const idx = userAnswers[qId].indexOf(key);
+            if (idx > -1) {
+                userAnswers[qId].splice(idx, 1);
+            } else {
+                userAnswers[qId].push(key);
+            }
+            loadQuestion(currentQuestionIndex);
+        }
+
+        function selectCategoryAccess(qId, stmtId, catVal) {
+            if (!userAnswers[qId]) userAnswers[qId] = {};
+            userAnswers[qId][stmtId] = catVal;
+            updateNavGridVisuals();
+        }
+
+        function toggleDoubt() {
+            const q = examQuestions[currentQuestionIndex];
+            userDoubts[q.id] = document.getElementById('doubt-checkbox').checked;
+            updateNavGridVisuals();
+        }
+
+        function changeFontSize(delta) {
+            passageFontSize = Math.min(Math.max(passageFontSize + delta, 12), 22);
+            document.getElementById('passage-content-box').style.fontSize = passageFontSize + 'px';
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) loadQuestion(currentQuestionIndex - 1);
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < examQuestions.length - 1) loadQuestion(currentQuestionIndex + 1);
+        }
+
+        function renderNavGrid() {
+            const grid = document.getElementById('nav-grid');
+            grid.innerHTML = '';
+            examQuestions.forEach((q, i) => {
+                const btn = document.createElement('button');
+                btn.id = `nav-btn-${i}`;
+                btn.onclick = () => loadQuestion(i);
+                btn.className = "w-full aspect-square rounded-xl font-bold text-xs border transition flex items-center justify-center bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200";
+                btn.innerText = i + 1;
+                grid.appendChild(btn);
+            });
+            updateNavGridVisuals();
+        }
+
+        function updateNavGridVisuals() {
+            examQuestions.forEach((q, i) => {
+                const btn = document.getElementById(`nav-btn-${i}`);
+                if (!btn) return;
+
+                const isCurrent = i === currentQuestionIndex;
+                const isDoubt = !!userDoubts[q.id];
+                const hasAnswer = isQuestionAnswered(q);
+
+                let bgClasses = "bg-slate-100 text-slate-700 border-slate-200";
+
+                if (isDoubt) {
+                    bgClasses = "bg-amber-400 text-amber-950 border-amber-500 font-extrabold";
+                } else if (hasAnswer) {
+                    bgClasses = "bg-brand-600 text-white border-brand-700 font-bold";
+                }
+
+                btn.className = `w-full aspect-square rounded-xl font-bold text-xs border transition flex items-center justify-center ${bgClasses} ${isCurrent ? 'ring-2 ring-offset-2 ring-slate-900' : ''}`;
+            });
+        }
+
+        function isQuestionAnswered(q) {
+            const ans = userAnswers[q.id];
+            if (!ans) return false;
+            if (q.type === 'PG') return true;
+            if (q.type === 'PGK-MCMA') return ans.length > 0;
+            if (q.type === 'PGK-Kategori') return Object.keys(ans).length === q.statements.length;
+            return false;
+        }
+
+        function confirmFinish() {
+            let answeredCount = 0;
+            let doubtCount = 0;
+
+            examQuestions.forEach(q => {
+                if (isQuestionAnswered(q)) answeredCount++;
+                if (userDoubts[q.id]) doubtCount++;
+            });
+
+            const unAnswered = examQuestions.length - answeredCount;
+            let msg = `Anda telah menjawab ${answeredCount} dari 20 soal.`;
+            if (unAnswered > 0) msg += ` Masih ada ${unAnswered} soal belum dijawab.`;
+            if (doubtCount > 0) msg += ` Ada ${doubtCount} soal yang ditandai Ragu-ragu.`;
+
+            document.getElementById('modal-status-text').innerText = msg;
+            document.getElementById('finish-modal').classList.remove('hidden');
+        }
+
+        function closeFinishModal() {
+            document.getElementById('finish-modal').classList.add('hidden');
+        }
+
+        function submitExam() {
+            if (timerInterval) clearInterval(timerInterval);
+            closeFinishModal();
+
+            document.getElementById('header-user-name').innerText = studentData.name;
+            document.getElementById('exam-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            document.getElementById('result-student-name').innerText = studentData.name;
+            document.getElementById('result-student-meta').innerText = `Kelas: ${studentData.class} | SMAN 1 Banggai`;
+
+            if (document.getElementById('print-student-name')) {
+                document.getElementById('print-student-name').innerText = studentData.name;
+            }
+            if (document.getElementById('print-date')) {
+                const today = new Date();
+                document.getElementById('print-date').innerText = today.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            }
+
+            // Calculate score
+            let correctCount = 0;
+
+            examQuestions.forEach(q => {
+                const userAns = userAnswers[q.id];
+                if (q.type === 'PG') {
+                    if (userAns === q.key) correctCount++;
+                } 
+                else if (q.type === 'PGK-MCMA') {
+                    if (Array.isArray(userAns)) {
+                        const sortedUser = [...userAns].sort();
+                        const sortedKey = [...q.key].sort();
+                        if (JSON.stringify(sortedUser) === JSON.stringify(sortedKey)) {
+                            correctCount++;
+                        }
+                    }
+                }
+                else if (q.type === 'PGK-Kategori') {
+                    if (userAns && typeof userAns === 'object') {
+                        let isAllMatch = true;
+                        Object.keys(q.key).forEach(stmtId => {
+                            if (userAns[stmtId] !== q.key[stmtId]) isAllMatch = false;
+                        });
+                        if (isAllMatch) correctCount++;
+                    }
+                }
+            });
+
+            const finalScore = Math.round((correctCount / examQuestions.length) * 100);
+            document.getElementById('final-score').innerText = finalScore;
+            document.getElementById('score-breakdown').innerText = `Benar ${correctCount} dari 20 Soal (${finalScore}%)`;
+
+            if (typeof saveResultToCloud === 'function') {
+                saveResultToCloud({
+                    name: studentData.name,
+                    className: studentData.class,
+                    score: finalScore,
+                    correct: correctCount,
+                    total: examQuestions.length
+                });
+            }
+
+            renderReviewList();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderReviewList(filter = 'all') {
+            const listContainer = document.getElementById('review-list');
+            listContainer.innerHTML = '';
+
+            examQuestions.forEach(q => {
+                const userAns = userAnswers[q.id];
+                let isCorrect = false;
+
+                if (q.type === 'PG' && userAns === q.key) isCorrect = true;
+                if (q.type === 'PGK-MCMA' && Array.isArray(userAns) && JSON.stringify([...userAns].sort()) === JSON.stringify([...q.key].sort())) isCorrect = true;
+                if (q.type === 'PGK-Kategori' && userAns && typeof userAns === 'object') {
+                    let match = true;
+                    Object.keys(q.key).forEach(k => { if (userAns[k] !== q.key[k]) match = false; });
+                    if (match) isCorrect = true;
+                }
+
+                if (filter === 'wrong' && isCorrect) return;
+
+                const card = document.createElement('div');
+                card.className = `bg-white border rounded-2xl p-6 shadow-sm ${isCorrect ? 'border-emerald-200' : 'border-red-200'}`;
+
+                let userAnsDisplay = "-";
+                let keyAnsDisplay = "-";
+
+                if (q.type === 'PG') {
+                    userAnsDisplay = userAns || "Tidak dijawab";
+                    keyAnsDisplay = q.key;
+                } else if (q.type === 'PGK-MCMA') {
+                    userAnsDisplay = userAns && userAns.length ? userAns.join(', ') : "Tidak dijawab";
+                    keyAnsDisplay = q.key.join(', ');
+                } else if (q.type === 'PGK-Kategori') {
+                    userAnsDisplay = userAns ? JSON.stringify(userAns) : "Tidak dijawab";
+                    keyAnsDisplay = JSON.stringify(q.key);
+                }
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="w-7 h-7 bg-slate-900 text-white rounded-lg flex items-center justify-center font-bold text-xs">${q.id}</span>
+                            <span class="text-xs font-bold ${isCorrect ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : 'text-red-700 bg-red-50 border-red-200'} px-2.5 py-1 rounded-md border">
+                                ${isCorrect ? 'BENAR (+5)' : 'SALAH / BELUM DIJAWAB'}
+                            </span>
+                        </div>
+                        <span class="text-xs text-slate-400 font-medium">${q.competency}</span>
+                    </div>
+
+                    <p class="font-semibold text-slate-900 text-sm mb-3">${q.prompt}</p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs mb-4">
+                        <div class="p-3 rounded-xl ${isCorrect ? 'bg-emerald-50/50 border border-emerald-100' : 'bg-red-50/50 border border-red-100'}">
+                            <span class="text-slate-500 block font-medium mb-1">Jawaban Anda:</span>
+                            <span class="font-bold ${isCorrect ? 'text-emerald-800' : 'text-red-800'}">${userAnsDisplay}</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                            <span class="text-slate-500 block font-medium mb-1">Kunci Jawaban Resmi:</span>
+                            <span class="font-bold text-slate-800">${keyAnsDisplay}</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-4 text-xs">
+                        <span class="font-bold text-amber-900 flex items-center gap-1.5 mb-1">
+                            <i data-lucide="book-open-check" class="w-4 h-4 text-amber-700"></i> Pembahasan Soal:
+                        </span>
+                        <p class="text-amber-950 leading-relaxed">${q.explanation}</p>
+                    </div>
+                `;
+
+                listContainer.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function filterReview(type) {
+            document.getElementById('filter-btn-all').className = type === 'all' ? 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 text-white' : 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200';
+            document.getElementById('filter-btn-wrong').className = type === 'wrong' ? 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-600 text-white' : 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-100 text-red-700 hover:bg-red-200';
+            renderReviewList(type);
+        }
+
+        function restartExam() {
+            showConfirm("Ulangi Simulasi", "Apakah Anda yakin ingin mengulang tes simulasi dari awal?", () => {
+                userAnswers = {};
+                userDoubts = {};
+                currentQuestionIndex = 0;
+                document.getElementById('result-screen').classList.add('hidden');
+                document.getElementById('welcome-modal').classList.remove('hidden');
+            });
+        }
+
+        // --- ADMIN FEATURES ---
+        const ADMIN_PASSWORD = "j4ck4r0o";
+
+        function openAdminLogin() {
+            document.getElementById('admin-login-modal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('admin-password').focus(), 100);
+        }
+
+        function closeAdminLogin() {
+            document.getElementById('admin-login-modal').classList.add('hidden');
+            document.getElementById('admin-password').value = '';
+        }
+
+        function checkAdminLogin() {
+            const pwd = document.getElementById('admin-password').value;
+            if (pwd === ADMIN_PASSWORD) {
+                closeAdminLogin();
+                document.getElementById('welcome-modal').classList.add('hidden');
+                document.getElementById('admin-screen').classList.remove('hidden');
+                document.querySelector('header').classList.add('hidden'); // Sembunyikan header ujian
+                if (window.startAdminListener) window.startAdminListener();
+            } else {
+                showMessage("Akses Ditolak", "Kata sandi yang Anda masukkan salah. Silakan coba lagi.");
+            }
+        }
+
+        function logoutAdmin() {
+            document.getElementById('admin-screen').classList.add('hidden');
+            document.getElementById('welcome-modal').classList.remove('hidden');
+            document.querySelector('header').classList.remove('hidden');
+            if (window.adminUnsubscribe) {
+                window.adminUnsubscribe();
+                window.adminUnsubscribe = null;
+            }
+        }
+
+        async function saveResultToCloud(data) {
+            if (!window.isFirebaseReady || !window.firebaseDB || !window.firebaseAuth.currentUser) {
+                console.log("Firebase belum siap, data hanya ada di lokal sementara.");
+                return;
+            }
+            try {
+                const colRef = window.firebaseCollection(window.firebaseDB, 'artifacts', window.firebaseAppId, 'public', 'data', 'examResults');
+                await window.firebaseAddDoc(colRef, {
+                    ...data,
+                    timestamp: new Date().toISOString(),
+                    userId: window.firebaseAuth.currentUser.uid
+                });
+                console.log("Hasil tersimpan di Cloud Firestore.");
+            } catch (e) {
+                console.error("Gagal menyimpan hasil:", e);
+            }
+        }
+
+        window.startAdminListener = function() {
+            if (!window.isFirebaseReady || !window.firebaseDB || !window.firebaseAuth.currentUser) {
+                document.getElementById('admin-table-body').innerHTML = '<tr><td colspan="5" class="text-center p-8 text-amber-600 bg-amber-50 rounded-b-xl border-t border-amber-200">Menghubungkan ke server database... Coba beberapa saat lagi.</td></tr>';
+                return;
+            }
+
+            const colRef = window.firebaseCollection(window.firebaseDB, 'artifacts', window.firebaseAppId, 'public', 'data', 'examResults');
+            const q = window.firebaseQuery(colRef);
+
+            document.getElementById('admin-table-body').innerHTML = '<tr><td colspan="5" class="text-center p-8 text-indigo-600 flex justify-center"><i data-lucide="loader-2" class="w-6 h-6 animate-spin"></i></td></tr>';
+            lucide.createIcons();
+
+            window.adminUnsubscribe = window.firebaseOnSnapshot(q, (snapshot) => {
+                const results = [];
+                snapshot.forEach(doc => {
+                    results.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Sorting manual (memori) mengurutkan yang terbaru di atas
+                results.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                renderAdminTable(results);
+            }, (error) => {
+                console.error("Error Realtime Admin:", error);
+                document.getElementById('admin-table-body').innerHTML = '<tr><td colspan="5" class="text-center p-8 text-red-500 bg-red-50">Koneksi terputus atau gagal memuat data.</td></tr>';
+            });
+        }
+
+        function renderAdminTable(results) {
+            const tbody = document.getElementById('admin-table-body');
+            if (results.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center p-8 text-slate-500">Belum ada siswa yang menyelesaikan simulasi.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = results.map((res, i) => {
+                const date = new Date(res.timestamp);
+                const timeStr = date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' <br><span class="text-[10px] text-slate-400">' + date.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) + '</span>';
+                
+                let statusBadge = '';
+                if (res.score >= 80) statusBadge = '<span class="px-2.5 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-md border border-emerald-200">Sangat Baik</span>';
+                else if (res.score >= 60) statusBadge = '<span class="px-2.5 py-1 bg-amber-100 text-amber-700 text-xs font-bold rounded-md border border-amber-200">Cukup</span>';
+                else statusBadge = '<span class="px-2.5 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-md border border-red-200">Kurang</span>';
+
+                return `
+                    <tr class="${i % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'} border-b border-slate-100 hover:bg-indigo-50/50 transition">
+                        <td class="p-3 text-xs text-slate-600 align-middle">${timeStr}</td>
+                        <td class="p-3 text-sm font-semibold text-slate-800 align-middle">${res.name}</td>
+                        <td class="p-3 text-sm text-slate-600 align-middle">${res.className}</td>
+                        <td class="p-3 text-center align-middle">
+                            <span class="text-lg font-bold ${res.score >= 60 ? 'text-emerald-600' : 'text-amber-600'}">${res.score}</span>
+                        </td>
+                        <td class="p-3 text-center align-middle">${statusBadge}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // --- UI HELPERS (REPLACES ALERT/CONFIRM) ---
+        function showMessage(title, message, callback) {
+            document.getElementById('message-title').innerText = title;
+            document.getElementById('message-body').innerText = message;
+            document.getElementById('message-modal').classList.remove('hidden');
+            window.messageCallback = callback;
+        }
+
+        function closeMessageModal() {
+            document.getElementById('message-modal').classList.add('hidden');
+            if (window.messageCallback) {
+                window.messageCallback();
+                window.messageCallback = null;
+            }
+        }
+
+        function showConfirm(title, message, onYes) {
+            document.getElementById('confirm-title').innerText = title;
+            document.getElementById('confirm-body').innerText = message;
+            document.getElementById('generic-confirm-modal').classList.remove('hidden');
+            document.getElementById('confirm-yes-btn').onclick = () => {
+                closeGenericConfirm();
+                if(onYes) onYes();
+            };
+        }
+
+        function closeGenericConfirm() {
+            document.getElementById('generic-confirm-modal').classList.add('hidden');
+        }
+
+    </script>
+</body>
+</html>
